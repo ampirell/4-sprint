@@ -47,9 +47,9 @@ public class OrderPageTest {
                 {"Студент", "Старающийся", "Пум 12", "Красносельская", "09876543210", "31.05.2024", "сутки", "чёрный жемчуг", "С ветерком", "Заказ оформлен"}
         };
     }
-
+    //Запуск теста на верхней кнопке
     @Test
-    public void letsMakeOrder() {
+    public void letsMakeOrderFromTopButton() {
         orderPage objOrderPage = new orderPage(driver);
 
         driver.get("https://qa-scooter.praktikum-services.ru/");
@@ -62,6 +62,20 @@ public class OrderPageTest {
         objOrderPage.acceptOrder(success);//нажать Заказать, Да и сравнить заголовок уведомления
     }
 
+    //Запуск теста на нижней кнопке
+    @Test
+    public void letsMakeOrderFromDownButton() {
+        orderPage objOrderPage = new orderPage(driver);
+
+        driver.get("https://qa-scooter.praktikum-services.ru/");
+        objOrderPage.clickToBottomButton();//Нажать Заказать
+        objOrderPage.acceptCookie();//скипнуть куки
+        objOrderPage.firstStepOfOrder(nameTest, surnameTest, addressTest, stationName, phoneTest);//заполнить поля на 1 странице
+        objOrderPage.clickNext();//нажать Далее
+        objOrderPage.secondStepOfOrder(dateTest, termOfRentTest, colour, commentTest);//заполнить поля на 2 странице
+        objOrderPage.clickToFinishOrder();
+        objOrderPage.acceptOrder(success);//нажать Заказать, Да и сравнить заголовок уведомления
+    }
     @After
     public void tearDown(){
         driver.quit();

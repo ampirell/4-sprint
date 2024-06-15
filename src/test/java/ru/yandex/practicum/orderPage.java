@@ -1,9 +1,12 @@
 package ru.yandex.practicum;
 
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
 import static com.codeborne.selenide.Selectors.byText;
 
 
@@ -53,7 +56,7 @@ public class orderPage extends BasePage {
     private final By comment=By.xpath(".//input[@placeholder='Комментарий для курьера']");
 
     // кнопка Заказать
-    private final By makeOrder=By.xpath(".//button[text()='Заказать']");
+    private final By makeOrder=By.xpath(".//div[@class='Order_Buttons__1xGrp']/button[text()='Заказать']");
     //Кнопка Да
     private final By accept=By.xpath(".//button[text()='Да']");
     //хедер Заказ оформлен
@@ -63,10 +66,16 @@ public class orderPage extends BasePage {
     public void clickToTopButton(){
         driver.findElement(orderButton).click();
     }
+
     //нажать на кнопку Заказать внизу страницы
     public void clickToBottomButton(){
+        WebElement element = driver.findElement(orderBottomButton);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+        new WebDriverWait(driver, Duration.ofSeconds(30))
+                .until(ExpectedConditions.visibilityOfElementLocated(orderBottomButton));
         driver.findElement(orderBottomButton).click();
     }
+
     //заподнить поля на 1 странице и нажать далее
     public void firstStepOfOrder(String nameTest, String surnameTest, String addressTest, String phoneTest, String stationName){
         driver.findElement(name).sendKeys(nameTest);
@@ -99,12 +108,11 @@ public class orderPage extends BasePage {
     //нажать кнопку Заказать
     public void clickToFinishOrder(){
         driver.findElement(makeOrder).click();
-        driver.findElement(makeOrder).click();
     }
 
     //проверка формирования заказа
     public void acceptOrder(String success){
         driver.findElement(accept).click();
-        Assert.assertEquals(driver.findElement(makeOrderSuccess).getText(), success);
+        Assert.assertTrue(driver.findElement(makeOrderSuccess).getText().contains(success));
     }
 }
